@@ -3,6 +3,7 @@ Functions for generating and verifying JSON Web Tokens.
 """
 
 import threading
+from collections import ChainMap
 from datetime import datetime, timedelta
 from calendar import timegm
 from base64 import urlsafe_b64encode
