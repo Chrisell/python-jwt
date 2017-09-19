@@ -39,6 +39,7 @@ class _JWTError(Exception):
 def generate_jwt(claims, priv_key=None,
                  algorithm='PS512', lifetime=None, expires=None,
                  not_before=None,
+                 additional_headers={},
                  jti_size=16):
     """
     Generate a JSON Web Token.
@@ -61,6 +62,9 @@ def generate_jwt(claims, priv_key=None,
     :param not_before: When the token is valid from. Defaults to current time (if ``None`` is passed).
     :type not_before: datetime.datetime
 
+    :param additional_headers: Additional headers to add to the JWT
+    :type additional_headers: dict
+
     :param jti_size: Size in bytes of the unique token ID to put into the token (can be used to detect replay attacks). Defaults to 16 (128 bits). Specify 0 or ``None`` to omit the JTI from the token.
     :type jti_size: int
 
@@ -72,10 +76,12 @@ def generate_jwt(claims, priv_key=None,
     - **nbf** (*IntDate*) -- The UTC valid-from date and time of the token.
     - **jti** (*str*) -- A unique identifier for the token.
     """
-    header = {
+    base_header = {
         'typ': 'JWT',
         'alg': algorithm if priv_key else 'none'
     }
+
+    header = dict(ChainMap(additional_headers, base_header))
 
     claims = dict(claims)
 
