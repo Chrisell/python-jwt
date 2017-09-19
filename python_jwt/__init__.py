@@ -3,7 +3,6 @@ Functions for generating and verifying JSON Web Tokens.
 """
 
 import threading
-from collections import ChainMap
 from datetime import datetime, timedelta
 from calendar import timegm
 from base64 import urlsafe_b64encode
@@ -82,7 +81,8 @@ def generate_jwt(claims, priv_key=None,
         'alg': algorithm if priv_key else 'none'
     }
 
-    header = dict(ChainMap(additional_headers, base_header))
+
+    header = dict(list(base_header.items()) + list(additional_headers.items()))
 
     claims = dict(claims)
 
